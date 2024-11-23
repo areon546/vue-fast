@@ -37,6 +37,13 @@ function saveScores(event) {
   }
 }
 
+function saveScoresWithSignatures(event) {
+  // ask user for signatures
+
+  // saves the score
+  saveScores(event)
+}
+
 function clearScores() {
   if (confirm("Are you sure you want to clear all the scores for this shoot?")) {
     if (confirm("Yeah but really?")) {
@@ -67,6 +74,7 @@ function addScore(score) {
                 @undo="scoresStore.undo" />
 
     <button class="save" v-if="maxReached" @click="saveScores">💾 Save score to history</button>
+    <button class="save" v-if="maxReached" @click="saveScoresWithSignatures">💾 Save With Signatures</button>
 
 
     <RoundScores :scores="scoresStore.scores"
