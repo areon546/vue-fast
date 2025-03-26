@@ -13,6 +13,7 @@ Date.prototype.addDays = function (days) {
 
 export class PlayerHistory {
   constructor(storage, currentUserProfile = null) {
+    // Stores a list of scores
     this.storage = storage;
     this.storage.value = prepareHistoryData(this.storage.value, currentUserProfile);
   }
@@ -66,6 +67,7 @@ export class PlayerHistory {
   }
 
   addAverageEndScores(history) {
+    console.log(history, gameTypeConfig)
     return history.map(item => {
       // Get the game type configuration
       const gameType = item.gameType?.toLowerCase();
@@ -74,14 +76,20 @@ export class PlayerHistory {
       }
 
       // Get the number of ends for this game type
-      const numberOfEnds = gameTypeConfig[gameType].numberOfEnds;
+      const endSize = gameTypeConfig[gameType].endSize;
+      let numberOfEnds = 0;
+
+      numberOfEnds = item.scores.length/endSize;
+
+      // numberOfEnds = gameTypeConfig[gameType].numberOfEnds;
       if (!numberOfEnds || numberOfEnds <= 0) {
         return { ...item, averagePerEnd: null };
       }
 
       // Calculate average per end
       const averagePerEnd = Math.round((item.score / numberOfEnds) * 10) / 10; // Round to 1 decimal place
-      return { ...item, averagePerEnd };
+      console.log(gameType, averagePerEnd)
+      return { ...item, averagePerEnd: averagePerEnd };
     });
   }
 
