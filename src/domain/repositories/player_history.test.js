@@ -1,6 +1,7 @@
 import { classificationList } from "@/domain/scoring/classificationList.js";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { PlayerHistory } from "@/domain/repositories/player_history.js";
+import { gameTypeConfig } from "../scoring/game_types";
 
 beforeEach(() => {
   global.fetch = vi.fn((path) => {
@@ -70,6 +71,27 @@ describe("player history", () => {
 
     playerHistory.add(new Date(), 456, "national 50", [1, 2, 3], "yd");
     expect(playerHistory.totalArrows()).toEqual(3);
+  });
+
+  test("it can retreive your average score for a practice round", ()=> {
+    const storage = { value: [] };
+    const playerHistory = new PlayerHistory(storage);
+    const scoredValues = {0: 1, 1: 1};
+    const round = "practice 20yd"
+
+    // Add a practice round with an average score of 6 (it should extrapolate based on incomplete ends). 
+    playerHistory.add(new Date(), 2, "practice 20", scores=scoredValues, [1], "yd");
+
+    // Calculate average
+    const practice20ydRoundScores = getScoresForRound(playerHistory, round);
+    const totalScore = practice20ydRoundScores[0];
+    const arrowsShot = scoredValues.length;
+    const endSize = gameTypeConfig[round].endSize;
+
+    const practiceRoundAverageScore = totalScore / (end * arrowsShot);
+
+    expect(practiceRoundAverageScore.toEqual(6));
+
   });
 
   test("gets unique game types from recent games, ordered by most recent first", () => {

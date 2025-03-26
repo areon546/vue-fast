@@ -67,7 +67,6 @@ export class PlayerHistory {
   }
 
   addAverageEndScores(history) {
-    console.log(history, gameTypeConfig)
     return history.map(item => {
       // Get the game type configuration
       const gameType = item.gameType?.toLowerCase();
@@ -77,18 +76,13 @@ export class PlayerHistory {
 
       // Get the number of ends for this game type
       const endSize = gameTypeConfig[gameType].endSize;
-      let numberOfEnds = 0;
-
-      numberOfEnds = item.scores.length/endSize;
-
-      // numberOfEnds = gameTypeConfig[gameType].numberOfEnds;
+      const numberOfEnds = item.scores.length/endSize;
       if (!numberOfEnds || numberOfEnds <= 0) {
         return { ...item, averagePerEnd: null };
       }
 
       // Calculate average per end
       const averagePerEnd = Math.round((item.score / numberOfEnds) * 10) / 10; // Round to 1 decimal place
-      console.log(gameType, averagePerEnd)
       return { ...item, averagePerEnd: averagePerEnd };
     });
   }
