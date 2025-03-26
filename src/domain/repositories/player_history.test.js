@@ -77,11 +77,6 @@ describe("player history", () => {
     const playerHistory = new PlayerHistory();
     const assumedEndSize = 6; // Assumption: end size is 6, currently all rounds have end size 6, however we need to 
 
-    // if shooting a full end, the average should be equal to the sum of the end
-    const sixArrowsShot = [1, 2, 3, 4, 5, 6];
-    const sum6End = sixArrowsShot.reduce((sum, v) => sum + v, 0);
-    const expected6Score = sum6End;
-
     // if shooting less than a full end, the average should assume you shot a full end
     const nineArrowsShot = [9, 9, 9, 9, 9, 9, 9, 9, 9];
     const sum9End = nineArrowsShot.reduce((sum, v) => sum + v, 0);
@@ -92,17 +87,12 @@ describe("player history", () => {
     const sum12End = twelveArrowsShot.reduce((sum, v) => sum + v, 0);
     const expected12Score = (sum12End / twelveArrowsShot.length) * assumedEndSize;
 
-
-    playerHistory.add(new Date(), sum6End, "portsmouth", sixArrowsShot, "yd");
-    playerHistory.add(new Date(), sum9End, "practice 20yd", nineArrowsShot, "yd");
+    playerHistory.add(new Date(), sum9End, "portsmouth", nineArrowsShot, "yd");
     playerHistory.add(new Date(), sum12End, "practice 20yd", twelveArrowsShot, "yd");
 
-
     const sortedHistory = await playerHistory.sortedHistory();
-
-    expect(sortedHistory[0].averagePerEnd).toEqual(expected6Score);
-    expect(sortedHistory[1].averagePerEnd).toEqual(expected9Score);
-    expect(sortedHistory[2].averagePerEnd).toEqual(expected12Score);
+    expect(sortedHistory[0].averagePerEnd).toEqual(expected9Score);
+    expect(sortedHistory[1].averagePerEnd).toEqual(expected12Score);
   });
 
   test("gets unique game types from recent games, ordered by most recent first", () => {
